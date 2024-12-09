@@ -59,4 +59,14 @@ class User extends Authenticatable
     public function auditLogs(): HasMany{
         return $this->hasMany(AuditLog::class, 'actor_id', 'id');
     }
+
+    public function getPasswordAttribute()
+    {
+        return $this->attributes['password_hash'];
+    }
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password_hash'] = bcrypt($value);
+    }
 }

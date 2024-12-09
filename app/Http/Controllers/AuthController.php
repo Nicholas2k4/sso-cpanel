@@ -11,7 +11,7 @@ class AuthController extends Controller
 {
     public function signup_authenticate(Request $request) {
         $request->validate([
-            'email' => 'required|email|unique:dns',
+            'email' => 'required|email|unique:users',
             'password_hash' => 'required'
         ],[
             'email.required' => 'Email cannot be empty',
@@ -23,7 +23,8 @@ class AuthController extends Controller
 
         $user->display_name = explode('@', $request->email)[0];
         $user->email = $request->email;
-        $user->password_hash = Hash::make($request->password_hash);
+        $user->password = $request->password_hash; // Properti `password` otomatis mengarah ke `password_hash`.
+        $user->global_role = 'user';
 
         $user->save();
 
@@ -31,7 +32,7 @@ class AuthController extends Controller
 
     }
 
-    public function login_authenticate(Request $request){
+    public function login_authenticate(Request $request) {
         $credentials = $request->validate([
             'email' => 'required|email:dns',
             'password' => 'required',
@@ -39,8 +40,8 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
- 
-            return redirect()->intended('/index');
+
+            return redirect()->intended('teams'); 
         }
 
         return back()->with([
@@ -48,5 +49,11 @@ class AuthController extends Controller
         ]);
     }
 
+    public function logout(Request $request) {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route("login");
+    }
 
 }
