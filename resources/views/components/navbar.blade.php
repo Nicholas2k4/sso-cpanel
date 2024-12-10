@@ -121,12 +121,15 @@
 
         {{-- Logout --}}
         <div class="mt-auto mb-6 p-3 hover:bg-rose-500 rounded-lg transition text-red-500 hover:text-white">
-            <a href="#" class="text-md">
-                <div class="flex flex-row items-center rounded-lg transition">
-                    <i class="fa-solid fa-arrow-right-from-bracket mr-3 text-lg w-[22px]"></i>
-                    <span class="font-bold">Log Out</span>
-                </div>
-            </a>
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button class="text-md" type="submit">
+                    <div class="flex flex-row items-center rounded-lg transition">
+                        <i class="fa-solid fa-arrow-right-from-bracket mr-3 text-lg w-[22px]"></i>
+                        <span class="font-bold">Log Out</span>
+                    </div>
+                </button>
+            </form>
         </div>
     </div>
 </aside>
@@ -199,12 +202,15 @@
 
         {{-- Logout --}}
         <div class="mt-0 m-3 p-3 hover:bg-rose-500 rounded-lg transition text-red-500 hover:text-white">
-            <a href="#" class="text-md">
-                <div class="flex flex-row items-center rounded-lg transition">
-                    <i class="fa-solid fa-arrow-right-from-bracket mr-3 text-lg w-[22px]"></i>
-                    <span class="font-bold">Log Out</span>
-                </div>
-            </a>
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="text-md">
+                    <div class="flex flex-row items-center rounded-lg transition">
+                        <i class="fa-solid fa-arrow-right-from-bracket mr-3 text-lg w-[22px]"></i>
+                        <span class="font-bold">Log Out</span>
+                    </div>
+                </button>
+            </form>
         </div>
     </ul>
 </div>
