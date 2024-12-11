@@ -30,6 +30,7 @@
 </head>
 
 <body>
+    @include('components.alerts')
     @include('components.navbar')
 
     <div class="lg:ms-64 lg:pt-[70px] h-screen">
