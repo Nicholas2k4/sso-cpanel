@@ -20,6 +20,7 @@
 
     {{-- Fonts --}}
     <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
     <style>
         body {
             font-family: 'Inter';
