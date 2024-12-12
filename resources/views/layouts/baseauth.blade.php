@@ -29,12 +29,12 @@
 </head>
 <body>
     @include('components.alerts')
-    <div class="absolute mt-5">
-        <span class=" text-md lg:text-3xl font-bold italic text-[#555555] ml-5 mt-5 ">Single Sign On</span>
+    <div class="absolute mt-3">
+        <img src="{{ asset('assets/logo.png') }}" alt="logo" class="w-[100px] md:w-[130px] object-cover ml-5">
     </div>
 
     <div class="flex justify-center items-center min-h-screen">
-        <div class="lg:basis-1/3">
+        <div class="basis-4/6 md:basis-1/3 lg:basis-1/3">
             @yield('content')
         </div>
     </div>
