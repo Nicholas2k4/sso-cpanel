@@ -20,6 +20,7 @@
 
     {{-- Fonts --}}
     <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
     <style>
         body {
             font-family: 'Inter';
@@ -30,6 +31,7 @@
 </head>
 
 <body>
+    @include('components.alerts')
     @include('components.navbar')
 
     <div class="lg:ms-64 lg:pt-[70px] h-screen">
