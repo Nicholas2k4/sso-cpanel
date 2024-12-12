@@ -28,6 +28,7 @@
 
 </head>
 <body>
+    @include('components.alerts')
     <div class="absolute mt-5">
         <span class=" text-md lg:text-3xl font-bold italic text-[#555555] ml-5 mt-5 ">Single Sign On</span>
     </div>
@@ -37,7 +38,7 @@
             @yield('content')
         </div>
     </div>
-    
+
 
 </body>
 </html>
