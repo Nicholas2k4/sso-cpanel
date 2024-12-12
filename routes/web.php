@@ -21,4 +21,4 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/loginGoogle', [AuthController::class, 'redirectToGoogle'])->name('user.auth');
 
-Route::get('/processLogin', [AuthController::class, 'loginGoogle'])->name('login.process');
+Route::get('/auth/callback', [AuthController::class, 'loginGoogle'])->name('login.process');

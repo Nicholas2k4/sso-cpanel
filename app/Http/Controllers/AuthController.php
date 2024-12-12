@@ -79,11 +79,11 @@ class AuthController extends Controller
                 ]);
 
                 Auth::login($authUser);
-                return redirect()->route('teams')->with('success', 'Login Success !');
+                return redirect()->route('teams')->with('success', 'Login Success!');
             }
         } catch (Exception $e){
             Log::error('Login Google Error: ' . $e->getMessage());
-            return redirect()->route('login');
+            return redirect()->route('login')->with('error', 'Google login failed!');
         }
     }
 }
