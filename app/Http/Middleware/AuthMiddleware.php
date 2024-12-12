@@ -19,6 +19,6 @@ class AuthMiddleware
         if (Auth::check() && in_array(Auth::user()->global_role, $role)) {
             return $next($request);
         }
-        return redirect('/login');
+        return redirect('/login')->with('error', 'Please login!');
     }
 }

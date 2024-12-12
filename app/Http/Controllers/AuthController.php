@@ -26,7 +26,7 @@ class AuthController extends Controller
 
         $user->display_name = explode('@', $request->email)[0];
         $user->email = $request->email;
-        $user->password = $request->password_hash; 
+        $user->password = $request->password_hash;
         $user->global_role = 'user';
 
         $user->save();
@@ -44,7 +44,7 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('teams'); 
+            return redirect()->intended('teams')->with('success', 'Login success!');
         }
 
         return back()->with([
@@ -56,7 +56,7 @@ class AuthController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route("login");
+        return redirect()->route("login")->with('success', 'Logged out!');
     }
 
     public function redirectToGoogle() {
