@@ -73,6 +73,7 @@ class AuthController extends Controller
             if ($user) {
                 $authUser = User::firstOrCreate([
                     'email' => $user->getEmail(),
+                ],[
                     'display_name' => $user->getName(),
                     'password_hash' => Hash::make('user'), // idk ini harus diisi gmn
                     'global_role' => 'user',
