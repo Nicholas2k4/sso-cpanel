@@ -3,7 +3,7 @@
 @section('content')
 <form action="{{ route('signin.post') }}" method="POST" enctype="multipart/form-data">
     @csrf
-    <h1 class="font-bold text-center mb-5 text-[#555555] text-xl lg:text-3xl">Welcome Back</h1>
+    <h1 class="font-bold text-center mb-5 text-[#555555] text-2xl md:text-3xl">Welcome Back</h1>
     <x-input label="Email address" name="email" type="email" placeholder="example@gmail.com"></x-input>
     <x-input label="Password" name="password" type="password" placeholder="Enter your password"></x-input>
     <a href="{{ route('user.auth') }}" class="px-9 py-2 lg:h-[3.5rem] h-[2.5rem] text-xs lg:text-base w-full flex border border-[#555555] items-center justify-center mb-4 rounded-md hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-500">
