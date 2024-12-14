@@ -91,7 +91,7 @@
                         <span>List Teams</span>
                     </li>
                 </a>
-                <a href="#" class="text-md">
+                <a href="{{ route('teams.create') }}" class="text-md">
                     <li class="flex flex-row items-center p-2 px-3 my-2 hover:bg-gray-200 rounded-lg transition">
                         <i class="fa-regular fa-square-plus mr-3 text-lg w-[22px]"></i>
                         <span>Create Team</span>
@@ -163,7 +163,7 @@
                     <span>List Teams</span>
                 </li>
             </a>
-            <a href="#" class="text-md">
+            <a href="{{ route('teams.create') }}" class="text-md">
                 <li class="flex flex-row items-center p-2 px-3 my-2 hover:bg-gray-200 rounded-lg transition">
                     <i class="fa-regular fa-square-plus mr-3 text-lg w-[22px]"></i>
                     <span>Create Team</span>
