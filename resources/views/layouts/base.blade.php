@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Base Layout</title>
 
+    {{-- CSRF Token --}}
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     {{-- Tailwind --}}
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -20,6 +23,7 @@
 
     {{-- Fonts --}}
     <link href='https://fonts.googleapis.com/css?family=Inter' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
     <style>
         body {
             font-family: 'Inter';
@@ -27,16 +31,29 @@
     </style>
 
     @yield('style')
+    @livewireStyles
 </head>
 
 <body>
+    @include('components.alerts')
     @include('components.navbar')
 
     <div class="lg:ms-64 lg:pt-[70px] h-screen">
         @yield('body')
     </div>
 
+    <script>
+        $(document).ready(function() {
+            $.ajaxSetup({
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                },
+            });
+        });
+    </script>
+
     @yield('script')
+    @livewireScripts
 </body class="overflow-y-hidden">
 
 </html>
