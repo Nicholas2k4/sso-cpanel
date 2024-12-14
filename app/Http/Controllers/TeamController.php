@@ -35,7 +35,6 @@ class TeamController extends Controller
 
     public function show()
     {
-        $teams = Team::all();
-        return view('teams', compact('teams'));
+        return view('teams');
     }
 }

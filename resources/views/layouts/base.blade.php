@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Base Layout</title>
 
+    {{-- CSRF Token --}}
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     {{-- Tailwind --}}
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -28,6 +31,7 @@
     </style>
 
     @yield('style')
+    @livewireStyles
 </head>
 
 <body>
@@ -38,7 +42,18 @@
         @yield('body')
     </div>
 
+    <script>
+        $(document).ready(function() {
+            $.ajaxSetup({
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                },
+            });
+        });
+    </script>
+
     @yield('script')
+    @livewireScripts
 </body class="overflow-y-hidden">
 
 </html>
