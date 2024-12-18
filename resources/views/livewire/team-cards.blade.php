@@ -41,7 +41,7 @@
                         </div>
                     </div>
                     <hr class="mt-auto">
-                    <a href="#"
+                    <a href="{{ route('teams.resource', $team->id) }}"
                         class="bg-blue-100 w-full h-[40px] flex items-center justify-center transition-all duration-200 hover:bg-blue-500 hover:text-white">Detail</a>
                 </div>
             @endforeach
