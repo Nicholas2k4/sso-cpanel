@@ -76,8 +76,8 @@
             <img src="{{ asset('assets/icons/profile.png') }}" alt="profile_icon"
                 class="h-[15px] object-contain my-auto mr-4">
             <div class="flex flex-col my-auto mr-4">
-                <h2 class="text-gray-500 text-xs">ROLE</h2>
-                <p>Full Name Here</p>
+                <h2 class="text-gray-500 text-xs">{{ auth()->user()->global_role }}</h2>
+                <p>{{ auth()->user()->display_name }}</p>
             </div>
         </div>
     </div>
@@ -195,8 +195,8 @@
             <img src="{{ asset('assets/icons/profile.png') }}" alt="profile_icon"
                 class="h-[15px] object-contain my-auto mr-4">
             <div class="flex flex-col my-auto mr-4">
-                <h2 class="text-gray-500 text-xs">ROLE</h2>
-                <p>Full Name Here</p>
+                <h2 class="text-gray-500 text-xs">{{ auth()->user()->global_role }}</h2>
+                <p>{{ auth()->user()->display_name }}</p>
             </div>
         </div>
 
