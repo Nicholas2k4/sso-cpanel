@@ -13,8 +13,8 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="leader_user_id" class="form-label text-[#4285F4] text-[12px] lg:text-sm font-semibold">Team Leader</label>
-                    <select name="leader_user_id" id="leader_user_id" class="form-control  w-full px-4 py-2 text-[#4285F4] h-[1.5rem] text-[9px] md:text-xs md:h-[2.5rem] placeholder-[#90C0E9] border border-[#90C0E9] rounded-md focus:ring-2 focus:ring-[#90C0E9] focus:outline-none focus:border-[#90C0E9]" required>
+                    <label for="leader_user_id" class="form-label text-[#4285F4] text-[12px] lg:text-sm font-semibold mb-2">Team Leader</label>
+                    <select id="leader_user_id" name="leader_user_id" class="w-full px-4 py-2 text-[#4285F4] h-[1.5rem] text-[9px] md:text-xs md:h-[2.5rem] placeholder-[#90C0E9] border border-[#90C0E9] rounded-md focus:ring-2 focus:ring-[#90C0E9] focus:outline-none focus:border-[#90C0E9]" required">
                         <option value="" disabled selected>Select Team Leader</option>
                         @foreach ($users as $user)
                             <option value="{{ $user->id }}">{{ $user->display_name }}</option>
@@ -33,4 +33,34 @@
             </form>
         </div>
     </div>
+    <script>
+        $(document).ready(function () {
+            $('#leader_user_id').select2({
+                placeholder: 'Select Team Leader',
+                allowClear: true, 
+                ajax: {
+                    url: '/api/users', 
+                    dataType: 'json', 
+                    delay: 250, 
+                    data: function (params) {
+                        return {
+                            search: params.term, 
+                            limit: 10
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data.map(function (user) {
+                                return {
+                                    id: user.id,
+                                    text: user.display_name
+                                };
+                            })
+                        };
+                    }
+                },
+                minimumInputLength: 1
+            });
+        });
+    </script>    
 @endsection

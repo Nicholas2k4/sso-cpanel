@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 
 class TeamController extends Controller
 {
@@ -27,11 +28,22 @@ class TeamController extends Controller
 
         Team::create([
             'name' => $request->name,
-            'logo_link' => $logoPath,
+            'logo_link' => Storage::url($logoPath),
             'leader_user_id' => $request->leader_user_id,
         ]);
 
-        return redirect()->route('teams');
+        return redirect()->route('teams')->with('success', 'Team created successfully.');
+    }
+
+    public function searchLeader(Request $request) {
+        $search = $request->input('search', ''); 
+        $limit = $request->input('limit', 10); 
+    
+        $users = User::where('display_name', 'LIKE', '%' . $search . '%')
+            ->take($limit)
+            ->get(['id', 'display_name']); 
+    
+        return response()->json($users);
     }
 
     public function show()
