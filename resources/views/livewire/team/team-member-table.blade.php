@@ -64,17 +64,17 @@
                             {{ $member->role }}
                         </td>
                         <td class="px-6 py-4 flex items-center justify-center gap-x-2">
-                            @if ($member->role == 'member')
+                            @if ($member->role == 'member' && (auth()->user()->groupRole($teamId) == 'manager' || auth()->user()->groupRole($teamId) == 'leader' || auth()->user()->global_role == 'admin'))
                                 <button
                                     class="font-medium bg-green-400 hover:bg-green-500 transition-all duration-200 px-4 py-2 rounded-lg shadow"
                                     onclick="promote({{ $member->id }})">Promote</button>
                             @endif
-                            @if ($member->role == 'manager')
+                            @if ($member->role == 'manager' && (auth()->user()->groupRole($teamId) == 'leader' || auth()->user()->global_role == 'admin'))
                                 <button
                                     class="font-medium bg-yellow-400 hover:bg-yellow-500 transition-all duration-200 px-4 py-2 rounded-lg shadow"
                                     onclick="demote({{ $member->id }})">Demote</button>
                             @endif
-                            @if ($member->role != 'leader')
+                            @if ($member->role != 'leader' && ((auth()->user()->groupRole($teamId) == 'leader' && $member->role == 'manager') || (auth()->user()->groupRole($teamId) == 'manager' && $member->role == 'member') || (auth()->user()->groupRole($teamId) == 'leader' && $member->role == 'member') || auth()->user()->global_role == 'admin'))
                                 <button
                                     class="font-medium bg-red-400 hover:bg-red-500 transition-all duration-200 px-4 py-2 rounded-lg shadow"
                                     onclick="kick({{ $member->id }})">Kick</button>

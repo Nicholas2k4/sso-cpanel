@@ -63,6 +63,14 @@ class TeamController extends Controller
             ], 400);
         }
 
+        $authRole = auth()->user()->groupRole($member->team_id);
+        if (auth()->user()->global_role != 'admin' && ($authRole == 'guest' || $authRole == 'member')) {
+            return response()->json([
+                'error' => true,
+                'message' => "Unauthorized!",
+            ], 400);
+        }
+
         $member->role = 'manager';
         $member->save();
 
@@ -83,6 +91,14 @@ class TeamController extends Controller
             ], 400);
         }
 
+        $authRole = auth()->user()->groupRole($member->team_id);
+        if (auth()->user()->global_role != 'admin' && ($authRole == 'guest' || $authRole == 'member' || $authRole == 'manager')) {
+            return response()->json([
+                'error' => true,
+                'message' => "Unauthorized!",
+            ], 400);
+        }
+
         $member->role = 'member';
         $member->save();
         return response()->json([
@@ -91,13 +107,26 @@ class TeamController extends Controller
         ]);
     }
 
-    public function kick(Request $request) {
+    public function kick(Request $request)
+    {
         $member = TeamMember::findOrFail($request['memberId']);
 
         if ($member->role == 'leader') {
             return response()->json([
                 'error' => true,
                 'message' => "Cannot kick this user!",
+            ], 400);
+        }
+
+        $authRole = auth()->user()->groupRole($member->team_id);
+        if (
+            (($member->role == 'manager' && ($authRole == 'manager' || $authRole == 'member' || $authRole == 'guest')) ||
+                ($member->role == 'member' && ($authRole == 'member' || $authRole == 'guest'))) &&
+            auth()->user()->global_role != 'admin'
+        ) {
+            return response()->json([
+                'error' => true,
+                'message' => "Unauthorized!",
             ], 400);
         }
 
