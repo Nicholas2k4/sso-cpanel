@@ -107,7 +107,7 @@
                         <span>Create Team</span>
                     </li>
                 </a>
-                <a href="#" class="text-md">
+                <a href="{{ route('resource.list') }}" class="text-md">
                     <li class="flex flex-row items-center p-2 px-3 my-2 hover:bg-gray-200 rounded-lg transition">
                         <i class="fa-solid fa-chart-column mr-3 text-lg w-[22px]"></i>
                         <span>Manage Resources</span>

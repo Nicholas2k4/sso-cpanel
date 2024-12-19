@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ResourceController;
+use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TeamController;
 
@@ -30,6 +32,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/demote', [TeamController::class, 'demote'])->name('demote');
     Route::post('/kick', [TeamController::class, 'kick'])->name('kick');
     Route::post('/addMember', [TeamController::class, 'addMember'])->name('addMember');
+
+    Route::post('/accessResource/{teamResource}', [TeamController::class, 'accessTeamResource'])->name('accessResource');
+
+    // For all routes to /resource, we need to make sure it's an admin.
+    Route::middleware(AdminMiddleware::class)->prefix('/resource')->name('resource.')->group(function () {
+        Route::get('/', [ResourceController::class, 'list'])->name('list');
+    });
 });
 
 Route::middleware(['check:admin'])->group(function () {});
