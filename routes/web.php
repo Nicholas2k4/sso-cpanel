@@ -24,6 +24,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware('auth')->group(function () {
     Route::get('/teams/create', [TeamController::class, 'create'])->name('teams.create');
     Route::get('/api/users', [TeamController::class, 'searchLeader']);    
+    Route::get('/api/teams', [TeamController::class, 'searchTeams']);    
     Route::post('/teams', [TeamController::class, 'store'])->name('teams.store');
     Route::get('/teams', [TeamController::class, 'show'])->name('teams');
     Route::get('/teams/{team}/resource', [TeamController::class, 'showResource'])->name('teams.resource');
@@ -33,6 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/demote', [TeamController::class, 'demote'])->name('demote');
     Route::post('/kick', [TeamController::class, 'kick'])->name('kick');
     Route::post('/addMember', [TeamController::class, 'addMember'])->name('addMember');
+    Route::get('/resources/create', function () { return view('create-resource'); });
 });
 
 Route::middleware(['check:admin'])->group(function () {});

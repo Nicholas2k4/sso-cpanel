@@ -46,6 +46,17 @@ class TeamController extends Controller
         return response()->json($users);
     }
 
+    public function searchTeams(Request $request) {
+        $search = $request->input('search', ''); 
+        $limit = $request->input('limit', 10); 
+    
+        $teams = Team::where('name', 'LIKE', '%' . $search . '%')
+            ->take($limit)
+            ->get(['id', 'name']); 
+    
+        return response()->json($teams);
+    }
+
     public function show()
     {
         return view('teams');
