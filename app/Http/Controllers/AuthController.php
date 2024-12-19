@@ -12,11 +12,22 @@ use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
-    public function signup_authenticate(Request $request) {
+    public function showSignup()
+    {
+        return view('auth.signup');
+    }
+
+    public function showLogin()
+    {
+        return view('auth.login');
+    }
+
+    public function signup_authenticate(Request $request)
+    {
         $request->validate([
             'email' => 'required|email|unique:users',
             'password_hash' => 'required'
-        ],[
+        ], [
             'email.required' => 'Email cannot be empty',
             'email.unique' => 'This email account is already registered',
             'password_hash.required' => 'password cannot be empty'
@@ -31,11 +42,11 @@ class AuthController extends Controller
 
         $user->save();
 
-        return redirect('/login')->with('success','Successfully created account!');
-
+        return redirect('/login')->with('success', 'Successfully created account!');
     }
 
-    public function login_authenticate(Request $request) {
+    public function login_authenticate(Request $request)
+    {
         $credentials = $request->validate([
             'email' => 'required|email:dns',
             'password' => 'required',
@@ -52,28 +63,31 @@ class AuthController extends Controller
         ]);
     }
 
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route("login")->with('success', 'Logged out!');
     }
 
-    public function redirectToGoogle() {
+    public function redirectToGoogle()
+    {
         return Socialite::driver('google')->redirect();
     }
 
-    public function loginGoogle() {
+    public function loginGoogle()
+    {
         Log::info('Google Callback Hit');
         Log::info('State: ' . request('state'));
         Log::info('Code: ' . request('code'));
-        try{
+        try {
             $user = Socialite::driver('google')->user();
             // dd($user);
             if ($user) {
                 $authUser = User::firstOrCreate([
                     'email' => $user->getEmail(),
-                ],[
+                ], [
                     'display_name' => $user->getName(),
                     'password_hash' => Hash::make('user'), // idk ini harus diisi gmn
                     'global_role' => 'user',
@@ -82,7 +96,7 @@ class AuthController extends Controller
                 Auth::login($authUser);
                 return redirect()->route('teams')->with('success', 'Login Success!');
             }
-        } catch (Exception $e){
+        } catch (Exception $e) {
             Log::error('Login Google Error: ' . $e->getMessage());
             return redirect()->route('login')->with('error', 'Google login failed!');
         }

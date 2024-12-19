@@ -48,16 +48,25 @@ class User extends Authenticatable
         ];
     }
 
-    public function leadedTeams(): HasMany{
+    public function leadedTeams(): HasMany
+    {
         return $this->hasMany(Team::class, 'leader_user_id', 'id');
     }
 
-    public function members(): HasMany{
+    public function members(): HasMany
+    {
         return $this->hasMany(TeamMember::class, 'user_id', 'id');
     }
 
-    public function auditLogs(): HasMany{
+    public function auditLogs(): HasMany
+    {
         return $this->hasMany(AuditLog::class, 'actor_id', 'id');
+    }
+
+    public function groupRole($teamId)
+    {
+        $teamMember = TeamMember::where('user_id', $this->id)->where('team_id', $teamId)->first();
+        return $teamMember->role ?? 'guest';
     }
 
     public function getPasswordAttribute()

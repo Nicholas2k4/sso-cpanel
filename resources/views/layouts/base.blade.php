@@ -54,6 +54,7 @@
 
     @yield('script')
     @livewireScripts
-</body class="overflow-y-hidden">
+    @vite(['resources/js/app.js'])
+</body>
 
 </html>
