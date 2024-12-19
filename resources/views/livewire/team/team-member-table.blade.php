@@ -64,7 +64,7 @@
                             {{ $member->role }}
                         </td>
                         <td class="px-6 py-4 flex items-center justify-center gap-x-2">
-                            @if ($member->role)
+                            @if ($member->role == 'member')
                                 <button
                                     class="font-medium bg-green-400 hover:bg-green-500 transition-all duration-200 px-4 py-2 rounded-lg shadow"
                                     onclick="promote({{ $member->id }})">Promote</button>
@@ -93,47 +93,139 @@
 
     {{-- Script --}}
     <script>
-        console.log(Livewire);
         function promote(id) {
-            console.log("promote", id);
-            $.ajax({
-                url: "{{ route('promote') }}",
-                method: "POST",
-                data: {
-                    teamId: {{ $teamId }},
-                    memberId: id
-                },
-                success: function(response) {
-                    console.log(response.message);
-                    window.location.reload();
-                },
-                error: function(xhr, status, error) {
-                    console.log(xhr.responseJSON.message);
+            Swal.fire({
+                title: 'Promote this user?',
+                text: "This action cannot be reverted!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#2C854D',
+                cancelButtonColor: '#888',
+                confirmButtonText: 'Promote',
+                cancelButtonText: 'Cancel',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('promote') }}",
+                        method: "POST",
+                        data: {
+                            teamId: {{ $teamId }},
+                            memberId: id
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: response.message,
+                                timer: 1500,
+                                timerProgressBar: true,
+                                showConfirmButton: false,
+                            }).then(() => {
+                                window.location.reload();
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: xhr.responseJSON.message,
+                                timer: 1500,
+                                showConfirmButton: false,
+                            })
+                        }
+                    });
                 }
             });
         }
 
         function demote(id) {
-            console.log("demote", id);
-            $.ajax({
-                url: "{{ route('demote') }}",
-                method: "POST",
-                data: {
-                    teamId: {{ $teamId }},
-                    memberId: id
-                },
-                success: function(response) {
-                    console.log(response.message);
-                    window.location.reload();
-                },
-                error: function(xhr, status, error) {
-                    console.log(xhr.responseJSON.message);
+            Swal.fire({
+                title: 'Demote this user?',
+                text: "This action cannot be reverted!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#FACC15',
+                cancelButtonColor: '#888',
+                confirmButtonText: 'Demote',
+                cancelButtonText: 'Cancel',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('demote') }}",
+                        method: "POST",
+                        data: {
+                            teamId: {{ $teamId }},
+                            memberId: id
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: response.message,
+                                timer: 1500,
+                                timerProgressBar: true,
+                                showConfirmButton: false,
+                            }).then(() => {
+                                window.location.reload();
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: xhr.responseJSON.message,
+                                timer: 1500,
+                                showConfirmButton: false,
+                            })
+                        }
+                    });
                 }
             });
         }
 
         function kick(id) {
-            console.log("kick", id);
+            Swal.fire({
+                title: 'Kick this user?',
+                text: "This action cannot be reverted!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#F87171',
+                cancelButtonColor: '#888',
+                confirmButtonText: 'Kick',
+                cancelButtonText: 'Cancel',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('kick') }}",
+                        method: "POST",
+                        data: {
+                            teamId: {{ $teamId }},
+                            memberId: id
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: response.message,
+                                timer: 1500,
+                                timerProgressBar: true,
+                                showConfirmButton: false,
+                            }).then(() => {
+                                window.location.reload();
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: xhr.responseJSON.message,
+                                timer: 1500,
+                                showConfirmButton: false,
+                            })
+                        }
+                    });
+                }
+            });
         }
 
         $(document).ready(function() {

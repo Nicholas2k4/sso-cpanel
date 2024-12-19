@@ -91,5 +91,20 @@ class TeamController extends Controller
         ]);
     }
 
-    public function kick(Request $request) {}
+    public function kick(Request $request) {
+        $member = TeamMember::findOrFail($request['memberId']);
+
+        if ($member->role == 'leader') {
+            return response()->json([
+                'error' => true,
+                'message' => "Cannot kick this user!",
+            ], 400);
+        }
+
+        $member->delete();
+        return response()->json([
+            'success' => true,
+            'message' => "User kicked!"
+        ]);
+    }
 }
