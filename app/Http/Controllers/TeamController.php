@@ -235,7 +235,8 @@ class TeamController extends Controller
                 $url = $this->removeSchemeAndHost($url);
 
                 // (temporary workaround) Add the WHM URL to the URL.
-                $url = $resoureData['whmUrl'] . '/' . $url;
+                $cpanelHost = parse_url($resoureData['whmUrl'], PHP_URL_HOST);
+                $url = 'https://' . $cpanelHost . ':2083/' . $url;
 
                 return redirect()->away($url);
             } else {
