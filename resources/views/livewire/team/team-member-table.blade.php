@@ -22,9 +22,13 @@
         </div>
 
         {{-- Add Members --}}
-        <a href="#"
-            class="ms-0 md:ms-auto bg-blue-500 text-white font-bold rounded-lg shadow px-5 py-2 flex items-center justify-center">+
-            Add Member</a>
+        @if (auth()->user()->global_role == 'admin' ||
+                auth()->user()->groupRole($teamId) == 'leader' ||
+                auth()->user()->groupRole($teamId) == 'manager')
+            <button onclick="openModal()"
+                class="ms-0 md:ms-auto bg-blue-500 text-white font-bold rounded-lg shadow px-5 py-2 flex items-center justify-center">+
+                Add Member</button>
+        @endif
     </div>
 
     {{-- Tables --}}
@@ -64,17 +68,28 @@
                             {{ $member->role }}
                         </td>
                         <td class="px-6 py-4 flex items-center justify-center gap-x-2">
-                            @if ($member->role == 'member' && (auth()->user()->groupRole($teamId) == 'manager' || auth()->user()->groupRole($teamId) == 'leader' || auth()->user()->global_role == 'admin'))
+                            @if (
+                                $member->role == 'member' &&
+                                    (auth()->user()->groupRole($teamId) == 'manager' ||
+                                        auth()->user()->groupRole($teamId) == 'leader' ||
+                                        auth()->user()->global_role == 'admin'))
                                 <button
                                     class="font-medium bg-green-400 hover:bg-green-500 transition-all duration-200 px-4 py-2 rounded-lg shadow"
                                     onclick="promote({{ $member->id }})">Promote</button>
                             @endif
-                            @if ($member->role == 'manager' && (auth()->user()->groupRole($teamId) == 'leader' || auth()->user()->global_role == 'admin'))
+                            @if (
+                                $member->role == 'manager' &&
+                                    (auth()->user()->groupRole($teamId) == 'leader' || auth()->user()->global_role == 'admin'))
                                 <button
                                     class="font-medium bg-yellow-400 hover:bg-yellow-500 transition-all duration-200 px-4 py-2 rounded-lg shadow"
                                     onclick="demote({{ $member->id }})">Demote</button>
                             @endif
-                            @if ($member->role != 'leader' && ((auth()->user()->groupRole($teamId) == 'leader' && $member->role == 'manager') || (auth()->user()->groupRole($teamId) == 'manager' && $member->role == 'member') || (auth()->user()->groupRole($teamId) == 'leader' && $member->role == 'member') || auth()->user()->global_role == 'admin'))
+                            @if (
+                                $member->role != 'leader' &&
+                                    ((auth()->user()->groupRole($teamId) == 'leader' && $member->role == 'manager') ||
+                                        (auth()->user()->groupRole($teamId) == 'manager' && $member->role == 'member') ||
+                                        (auth()->user()->groupRole($teamId) == 'leader' && $member->role == 'member') ||
+                                        auth()->user()->global_role == 'admin'))
                                 <button
                                     class="font-medium bg-red-400 hover:bg-red-500 transition-all duration-200 px-4 py-2 rounded-lg shadow"
                                     onclick="kick({{ $member->id }})">Kick</button>
@@ -89,6 +104,43 @@
     {{-- Pagination --}}
     <div class="mt-3">
         {{ $members->links() }}
+    </div>
+
+    {{-- Modal --}}
+    <div id="modal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg shadow-lg w-10/12 md:w-8/12 lg:w-1/2 p-6">
+            {{-- Header --}}
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold">Add Team Member</h2>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">&times;</button>
+            </div>
+
+            {{-- Body --}}
+            <div class="space-y-4">
+                {{-- Dropdown --}}
+                <div>
+                    <label for="user" class="block text-sm font-medium text-gray-700">User</label>
+                    <select id="user"
+                        class="w-full mt-2 border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 px-4 py-2 text-gray-700">
+                        <option value="" disabled selected class="text-gray-500">Select a member...</option>
+                        @foreach ($users as $user)
+                            <option value="{{ $user->id }}">{{ $user->email }} - {{ $user->display_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            {{-- Footer --}}
+            <div class="flex flex-col md:flex-row justify-end mt-6 md:space-x-4">
+                <button onclick="closeModal()" class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300">
+                    Cancel
+                </button>
+                <button class="bg-blue-500 text-white px-4 py-2 rounded mt-3 md:mt-0 hover:bg-blue-600"
+                    onclick="addMember()">
+                    Add Member
+                </button>
+            </div>
+        </div>
     </div>
 
     {{-- Script --}}
@@ -228,8 +280,58 @@
             });
         }
 
-        $(document).ready(function() {
+        function openModal() {
+            document.getElementById('modal').classList.remove('hidden');
+        }
 
-        });
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+        }
+
+        function addMember() {
+            const userId = $('#user').val();
+            if (!userId) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: "Please select a user!",
+                    timer: 1500,
+                    timerProgressBar: true,
+                    showConfirmButton: false,
+                });
+            } else {
+                $.ajax({
+                    url: "{{ route('addMember') }}",
+                    method: 'POST',
+                    data: {
+                        userId: userId,
+                        teamId: {{ $teamId }},
+                    },
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: response.message,
+                            timer: 1500,
+                            timerProgressBar: true,
+                            showConfirmButton: false,
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                        closeModal();
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: xhr.responseJSON.message,
+                            timer: 1500,
+                            showConfirmButton: false,
+                        })
+                        closeModal();
+                    }
+                });
+            }
+        }
     </script>
 </div>

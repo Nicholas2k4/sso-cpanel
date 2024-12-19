@@ -4,6 +4,7 @@ namespace App\Livewire\Team;
 
 use Livewire\Component;
 use App\Models\Team;
+use App\Models\User;
 use App\Models\TeamMember;
 use Livewire\WithPagination;
 
@@ -24,7 +25,16 @@ class TeamMemberTable extends Component
                 $query->where('display_name', 'like', '%' . $this->search . '%');
             })
             ->paginate($this->entries);
-        return view('livewire.team.team-member-table', compact('members'));
+
+        // members UID
+        $memberUserIds = TeamMember::where('team_id', $this->teamId)->pluck('user_id');
+
+        // users not in team
+        $users = User::where('global_role', 'user')
+            ->whereNotIn('id', $memberUserIds)
+            ->get();
+
+        return view('livewire.team.team-member-table', compact('members', 'users'));
     }
 
     public function updatingEntries()

@@ -37,6 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/promote', [TeamController::class, 'promote'])->name('promote');
     Route::post('/demote', [TeamController::class, 'demote'])->name('demote');
     Route::post('/kick', [TeamController::class, 'kick'])->name('kick');
+    Route::post('/addMember', [TeamController::class, 'addMember'])->name('addMember');
 });
 
 Route::get('/loginGoogle', [AuthController::class, 'redirectToGoogle'])->name('user.auth');

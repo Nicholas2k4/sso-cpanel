@@ -136,4 +136,26 @@ class TeamController extends Controller
             'message' => "User kicked!"
         ]);
     }
+
+    public function addMember(Request $request)
+    {
+        $authRole = auth()->user()->groupRole($request['teamId']);
+        if (auth()->user()->global_role != 'admin' && ($authRole == 'guest' || $authRole == 'member')) {
+            return response()->json([
+                'error' => true,
+                'message' => "Unauthorized!",
+            ], 400);
+        }
+
+        TeamMember::create([
+            'user_id' => $request['userId'],
+            'team_id' => $request['teamId'],
+            'role' => 'member'
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Member added!'
+        ]);
+    }
 }
