@@ -1,6 +1,10 @@
 <div>
     <div class="p-8 pe-8 xl:pe-24">
-        <h1 class="text-4xl font-bold mb-8">List Teams</h1>
+        @if (auth()->user()->global_role == 'admin')
+            <h1 class="text-4xl font-bold mb-8">List Teams</h1>
+        @else
+            <h1 class="text-4xl font-bold mb-8">My Teams</h1>
+        @endif
 
         {{-- Header Section --}}
         <div class="flex flex-col md:flex-row mb-6 gap-x-10 max-w-[1200px] flex-wrap gap-y-4">
@@ -26,7 +30,8 @@
 
             {{-- Add Teams --}}
             <a href="{{ route('teams.create') }}"
-                class="ms-0 md:ms-auto bg-blue-500 text-white font-bold rounded-lg shadow px-5 py-2 flex items-center justify-center">+ Add Team</a>
+                class="ms-0 md:ms-auto bg-blue-500 text-white font-bold rounded-lg shadow px-5 py-2 flex items-center justify-center">+
+                Add Team</a>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 max-w-[1200px]">
@@ -41,7 +46,7 @@
                         </div>
                     </div>
                     <hr class="mt-auto">
-                    <a href="#"
+                    <a href="{{ route('teams.resource', $team->id) }}"
                         class="bg-blue-100 w-full h-[40px] flex items-center justify-center transition-all duration-200 hover:bg-blue-500 hover:text-white">Detail</a>
                 </div>
             @endforeach

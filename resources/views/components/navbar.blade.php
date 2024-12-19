@@ -76,8 +76,8 @@
             <img src="{{ asset('assets/icons/profile.png') }}" alt="profile_icon"
                 class="h-[15px] object-contain my-auto mr-4">
             <div class="flex flex-col my-auto mr-4">
-                <h2 class="text-gray-500 text-xs">ROLE</h2>
-                <p>Full Name Here</p>
+                <h2 class="text-gray-500 text-xs">{{ auth()->user()->global_role }}</h2>
+                <p>{{ auth()->user()->display_name }}</p>
             </div>
         </div>
     </div>
@@ -85,22 +85,26 @@
         {{-- Navlist --}}
         <div class="mt-[85px]">
             <ul>
-                <a href="{{ route('teams') }}" class="text-md">
-                    <li class="flex flex-row items-center p-2 px-3 my-2 hover:bg-gray-200 rounded-lg transition">
-                        <i class="fa-regular fa-file-lines mr-3 text-lg w-[22px]"></i>
-                        <span>List Teams</span>
-                    </li>
-                </a>
+                @if (auth()->user()->global_role == 'admin')
+                    <a href="{{ route('teams') }}" class="text-md">
+                        <li class="flex flex-row items-center p-2 px-3 my-2 hover:bg-gray-200 rounded-lg transition">
+                            <i class="fa-regular fa-file-lines mr-3 text-lg w-[22px]"></i>
+                            <span>List Teams</span>
+                        </li>
+                    </a>
+                @endif
+                @if (auth()->user()->global_role == 'user')
+                    <a href="{{ route('teams') }}" class="text-md">
+                        <li class="flex flex-row items-center p-2 px-3 my-2 hover:bg-gray-200 rounded-lg transition">
+                            <i class="fa-solid fa-users-viewfinder mr-3 text-lg w-[22px]"></i>
+                            <span>My Teams</span>
+                        </li>
+                    </a>
+                @endif
                 <a href="{{ route('teams.create') }}" class="text-md">
                     <li class="flex flex-row items-center p-2 px-3 my-2 hover:bg-gray-200 rounded-lg transition">
                         <i class="fa-regular fa-square-plus mr-3 text-lg w-[22px]"></i>
                         <span>Create Team</span>
-                    </li>
-                </a>
-                <a href="#" class="text-md">
-                    <li class="flex flex-row items-center p-2 px-3 my-2 hover:bg-gray-200 rounded-lg transition">
-                        <i class="fa-solid fa-users-viewfinder mr-3 text-lg w-[22px]"></i>
-                        <span>My Teams</span>
                     </li>
                 </a>
                 <a href="#" class="text-md">
@@ -157,22 +161,26 @@
 <div id="smallNav" class="bg-white border-b-2 absolute w-full z-[99] lg:hidden">
     <ul class="ml-0">
         <ul class="m-3">
-            <a href="{{ route('teams') }}" class="text-md">
-                <li class="flex flex-row items-center p-2 px-3 my-2 hover:bg-gray-200 rounded-lg transition">
-                    <i class="fa-regular fa-file-lines mr-3 text-lg w-[22px]"></i>
-                    <span>List Teams</span>
-                </li>
-            </a>
+            @if (auth()->user()->global_role == 'admin')
+                <a href="{{ route('teams') }}" class="text-md">
+                    <li class="flex flex-row items-center p-2 px-3 my-2 hover:bg-gray-200 rounded-lg transition">
+                        <i class="fa-regular fa-file-lines mr-3 text-lg w-[22px]"></i>
+                        <span>List Teams</span>
+                    </li>
+                </a>
+            @endif
+            @if (auth()->user()->global_role == 'user')
+                <a href="{{ route('teams') }}" class="text-md">
+                    <li class="flex flex-row items-center p-2 px-3 my-2 hover:bg-gray-200 rounded-lg transition">
+                        <i class="fa-solid fa-users-viewfinder mr-3 text-lg w-[22px]"></i>
+                        <span>My Teams</span>
+                    </li>
+                </a>
+            @endif
             <a href="{{ route('teams.create') }}" class="text-md">
                 <li class="flex flex-row items-center p-2 px-3 my-2 hover:bg-gray-200 rounded-lg transition">
                     <i class="fa-regular fa-square-plus mr-3 text-lg w-[22px]"></i>
                     <span>Create Team</span>
-                </li>
-            </a>
-            <a href="#" class="text-md">
-                <li class="flex flex-row items-center p-2 px-3 my-2 hover:bg-gray-200 rounded-lg transition">
-                    <i class="fa-solid fa-users-viewfinder mr-3 text-lg w-[22px]"></i>
-                    <span>My Teams</span>
                 </li>
             </a>
             <a href="#" class="text-md">
@@ -195,8 +203,8 @@
             <img src="{{ asset('assets/icons/profile.png') }}" alt="profile_icon"
                 class="h-[15px] object-contain my-auto mr-4">
             <div class="flex flex-col my-auto mr-4">
-                <h2 class="text-gray-500 text-xs">ROLE</h2>
-                <p>Full Name Here</p>
+                <h2 class="text-gray-500 text-xs">{{ auth()->user()->global_role }}</h2>
+                <p>{{ auth()->user()->display_name }}</p>
             </div>
         </div>
 

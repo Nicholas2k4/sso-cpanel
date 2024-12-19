@@ -11,7 +11,7 @@
                     <label for="name" class="form-label text-[#4285F4] text-[12px] lg:text-sm font-semibold">Team Name</label>
                     <input type="text" name="name" id="name" class="form-control w-full px-4 py-2 text-[#4285F4] h-[1.5rem] text-[9px] md:text-xs md:h-[2.5rem] placeholder-[#90C0E9] border border-[#90C0E9] rounded-md focus:ring-2 focus:ring-[#90C0E9] focus:outline-none focus:border-[#90C0E9]" required>
                 </div>
-    
+
                 <div class="mb-3">
                     <label for="leader_user_id" class="form-label text-[#4285F4] text-[12px] lg:text-sm font-semibold">Team Leader</label>
                     <select name="leader_user_id" id="leader_user_id" class="form-control  w-full px-4 py-2 text-[#4285F4] h-[1.5rem] text-[9px] md:text-xs md:h-[2.5rem] placeholder-[#90C0E9] border border-[#90C0E9] rounded-md focus:ring-2 focus:ring-[#90C0E9] focus:outline-none focus:border-[#90C0E9]" required>
@@ -21,14 +21,14 @@
                         @endforeach
                     </select>
                 </div>
-    
+
                 <div class="mb-3">
                     <label for="logo" class="form-label text-[#4285F4] text-[12px] lg:text-sm font-semibold">Team Picture</label>
                     <input type="file" name="logo" id="logo" class="form-control w-full px-4 py-2 text-[#4285F4] h-[1.5rem] text-[9px] md:text-xs md:h-[2.5rem] bg-white placeholder-[#90C0E9] border border-[#90C0E9] rounded-md focus:ring-2 focus:ring-[#90C0E9] focus:outline-none focus:border-[#90C0E9]" accept="image/*" required>
                     <p class="italic text-slate-500 text-sm">Please upload square image, size less than 100KB</p>
                 </div>
-    
-                <button type="submit" class="px-4 py-2 md:h-[2.5rem] h-[1.5rem] text-xs md:text-base rounded-md font-semibold text-white bg-[#4587F3] hover:bg-[#639AF4] focus:outline-none focus:ring-2 focus:ring-[#468CFF]">Verify</button>
+
+                <button type="submit" class="px-4 py-2 md:h-[2.5rem] h-[1.5rem] text-xs md:text-base rounded-md font-semibold text-white bg-[#4587F3] hover:bg-[#639AF4] focus:outline-none focus:ring-2 focus:ring-[#468CFF]">Create</button>
                 <a href="/teams" class="ml-5">Cancel</a>
             </form>
         </div>
