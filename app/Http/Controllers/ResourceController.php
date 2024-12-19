@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AuditLog;
 use App\Models\Resource;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ResourceController extends Controller
 {
+    private $auditObjectType = "resource";
+
     public function list()
     {
         $resources = Resource::paginate(10);
@@ -58,6 +62,15 @@ class ResourceController extends Controller
             $resource->save();
             $resource->teams()->attach($validated['team_id']);
 
+            // Add an audit log entry
+            $auditLog = new AuditLog;
+            $auditLog->event_type = 'resource.create';
+            $auditLog->object_type = $this->auditObjectType;
+            $auditLog->object_id = $resource->id;
+            $auditLog->action = 'create';
+            $auditLog->actor_id = Auth::user()->id;
+            $auditLog->save();
+
             return redirect()->route('resource.show', $resource->id)->with('success', 'Resource created!');
         }
 
@@ -66,6 +79,7 @@ class ResourceController extends Controller
 
     public function delete(Resource $resource)
     {
+        $resource->teams()->detach();
         $resource->delete();
         return redirect()->back()->with('success', 'Resource deleted!');
     }

@@ -17,4 +17,7 @@ class Resource extends Model
     public function teams(): BelongsToMany{
         return $this->belongsToMany(Team::class, 'team_resources');
     }
+    protected $casts = [
+        'resource_data' => 'array',
+    ];
 }

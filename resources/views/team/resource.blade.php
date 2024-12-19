@@ -54,7 +54,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             @forelse ($resources as $resource)
                 @if ($resource->resource->type == 'cpanel')
-                    <x-resource-card.cpanel />
+                    <x-resource-card.cpanel :resource="$resource" />
                 @endif
             @empty
                 <div class="text-center col-span-3">

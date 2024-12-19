@@ -1,7 +1,13 @@
-<a
-    href={{ route('accessResource', $resource->id) }}
-    class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100"
+<form
+    action="{{ route('accessResource', $resource->resource->id) }}"
+    method="post"
+    class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 cursor-pointer"
+    tabindex="0"
+    aria-role="button"
+    target="_blank"
+    onclick="this.submit()"
 >
+    @csrf
     <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -23,12 +29,12 @@
         cPanel Account
     </h5>
     @php
-        $serverHost = parse_url($resource->resource_data['whmUrl'], PHP_URL_HOST);
+        $serverHost = parse_url($resource->resource->resource_data['whmUrl'], PHP_URL_HOST);
     @endphp
     <p class="font-normal text-gray-700">
         Server: {{ $serverHost }}
     </p>
     <p class="font-normal text-gray-700">
-        Username: {{ $resource->resource_data['cpanelUser'] }}
+        Username: {{ $resource->resource->resource_data['cpanelUser'] }}
     </p>
-</a>
+</form>

@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AuditLog;
 use App\Models\Resource;
 use App\Models\TeamResource;
 use Illuminate\Http\Request;
 use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class TeamController extends Controller
 {
@@ -28,11 +31,20 @@ class TeamController extends Controller
 
         $logoPath = $request->file('logo')->store('logos', 'public');
 
-        Team::create([
+        $team = Team::create([
             'name' => $request->name,
             'logo_link' => $logoPath,
             'leader_user_id' => $request->leader_user_id,
         ]);
+
+        $auditLog = new AuditLog;
+        $auditLog->event_type = 'team.create';
+        $auditLog->team_id = $team->id;
+        $auditLog->actor_id = Auth::user()->id;
+        $auditLog->object_type = "team";
+        $auditLog->object_id = $team->id;
+        $auditLog->action = 'create';
+        $auditLog->save();
 
         return redirect()->route('teams');
     }
@@ -52,6 +64,7 @@ class TeamController extends Controller
         $resources = TeamResource::where("team_id", "=", $team->id)->with("resource")->paginate(9);
         return view('team.resource', compact('team', 'resources'));
     }
+
     public function showMember(Team $team)
     {
         $authRole = auth()->user()->groupRole($team->id);
@@ -60,6 +73,7 @@ class TeamController extends Controller
         }
         return view('team.member', compact('team'));
     }
+
     public function showAudit(Team $team)
     {
         $authRole = auth()->user()->groupRole($team->id);
@@ -91,6 +105,17 @@ class TeamController extends Controller
         $member->role = 'manager';
         $member->save();
 
+        // Add an audit log entry
+        $auditLog = new AuditLog();
+        $auditLog->event_type = 'team.promote';
+        $auditLog->team_id = $member->team_id;
+        $auditLog->actor_id = Auth::user()->id;
+        $auditLog->object_type = "user";
+        $auditLog->object_id = $member->user_id;
+        $auditLog->action = 'promote';
+        $auditLog->description = "User {$member->user->display_name}({$member->user->email}) promoted to manager of team {$member->team->name}";
+        $auditLog->save();
+
         return response()->json([
             'success' => true,
             'message' => "User promoted!"
@@ -118,6 +143,18 @@ class TeamController extends Controller
 
         $member->role = 'member';
         $member->save();
+
+        // Add an audit log entry
+        $auditLog = new AuditLog();
+        $auditLog->event_type = 'team.demote';
+        $auditLog->team_id = $member->team_id;
+        $auditLog->actor_id = Auth::user()->id;
+        $auditLog->object_type = "user";
+        $auditLog->object_id = $member->user_id;
+        $auditLog->action = 'demote';
+        $auditLog->description = "User {$member->user->display_name}({$member->user->email}) demoted to member of team {$member->team->name}";
+        $auditLog->save();
+
         return response()->json([
             'success' => true,
             'message' => "User demoted!"
@@ -147,7 +184,19 @@ class TeamController extends Controller
             ], 400);
         }
 
+        // Add an audit log entry
+        $auditLog = new AuditLog();
+        $auditLog->event_type = 'team.kick';
+        $auditLog->team_id = $member->team_id;
+        $auditLog->actor_id = Auth::user()->id;
+        $auditLog->object_type = "user";
+        $auditLog->object_id = $member->user_id;
+        $auditLog->action = 'kick';
+        $auditLog->description = "User {$member->user->display_name}({$member->user->email}) kicked from team {$member->team->name}";
+        $auditLog->save();
+
         $member->delete();
+
         return response()->json([
             'success' => true,
             'message' => "User kicked!"
@@ -164,11 +213,22 @@ class TeamController extends Controller
             ], 400);
         }
 
-        TeamMember::create([
+        $newMember = TeamMember::create([
             'user_id' => $request['userId'],
             'team_id' => $request['teamId'],
             'role' => 'member'
         ]);
+
+        // Add an audit log entry for the new member
+        $auditLog = new AuditLog();
+        $auditLog->event_type = 'team.addMember';
+        $auditLog->team_id = $request['teamId'];
+        $auditLog->actor_id = Auth::user()->id;
+        $auditLog->object_type = "user";
+        $auditLog->object_id = $newMember->user_id;
+        $auditLog->action = 'add member';
+        $auditLog->description = "User {$newMember->user->display_name}({$newMember->user->email}) added to team {$newMember->team->name}";
+        $auditLog->save();
 
         return response()->json([
             'success' => true,
@@ -176,7 +236,8 @@ class TeamController extends Controller
         ]);
     }
 
-    private function removeSchemeAndHost(string $url): string {
+    private function removeSchemeAndHost(string $url): string
+    {
         $parts = parse_url($url);
 
         $result = '';
@@ -193,7 +254,8 @@ class TeamController extends Controller
         return $result;
     }
 
-    public function accessTeamResource(TeamResource $teamResource) {
+    public function accessTeamResource(TeamResource $teamResource)
+    {
         // Person accessing the resource must either be:
         // 1. A member of the team
         // 2. An admin of the team
@@ -204,28 +266,30 @@ class TeamController extends Controller
             // Currently available resource type: cPanel
             if ($teamResource->resource->type == 'cpanel') {
                 // Generate a one-time redirect URL.
-                $resoureData = $teamResource->resource->resource_data;
+                $resourceData = $teamResource->resource->resource_data;
 
                 // These fields must be present in the resource data:
                 $requiredFields = ['whmUrl', 'whmAuth', 'cpanelUser'];
                 foreach ($requiredFields as $field) {
-                    if (!isset($resoureData[$field])) {
+                    if (!isset($resourceData[$field])) {
                         return response()->setStatusCode(400, "Missing required field in resource '$field'");
                     }
                 }
 
-                $response = Http::withUrlParameters([
-                    'api.version' => 1,
-                    'user' => $resoureData['cpanelUser'],
-                    'service' => 'cpaneld'
-                ])
-                    ->withHeader("Authorization", $teamResource["cpanelUser"])
-                    ->get($resoureData['whmUrl'] . '/json-api/create_user_session');
+                $response = Http::
+                    withHeader("Authorization", $resourceData["whmAuth"])
+                    ->withOptions(["verify" => false])
+                    ->get($resourceData['whmUrl'] . '/json-api/create_user_session', [
+                        'api.version' => '1',
+                        'user' => $resourceData['cpanelUser'],
+                        'service' => 'cpaneld'
+                    ]);
 
                 $responseData = $response->json();
 
                 if ($response->status() != 200) {
-                    return response()->setStatusCode(400, $responseData['message']);
+                    Log::error('cPanel API Error: ' . json_encode($responseData));
+                    abort(400, "API Error, please contact admin.");
                 }
 
                 // Obtain the URL from the response data.
@@ -235,15 +299,27 @@ class TeamController extends Controller
                 $url = $this->removeSchemeAndHost($url);
 
                 // (temporary workaround) Add the WHM URL to the URL.
-                $cpanelHost = parse_url($resoureData['whmUrl'], PHP_URL_HOST);
+                $cpanelHost = parse_url($resourceData['whmUrl'], PHP_URL_HOST);
                 $url = 'https://' . $cpanelHost . ':2083/' . $url;
+
+                // Add an audit log entry
+                $user = Auth::user();
+                $auditLog = new AuditLog();
+                $auditLog->event_type = 'team.accessResource';
+                $auditLog->team_id = $teamResource->team_id;
+                $auditLog->actor_id = Auth::user()->id;
+                $auditLog->object_type = "resource";
+                $auditLog->object_id = $teamResource->resource_id;
+                $auditLog->action = 'access resource';
+                $auditLog->description = "User {$user->display_name}({$user->email}) accessed resource {$teamResource->resource->name}";
+                $auditLog->save();
 
                 return redirect()->away($url);
             } else {
-                return response()->setStatusCode(400);
+                abort(400);
             }
         }
 
-        return response()->setStatusCode(403);
+       abort(403);
     }
 }
