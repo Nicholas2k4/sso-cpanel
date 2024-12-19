@@ -41,14 +41,26 @@ class TeamController extends Controller
 
     public function showResource(Team $team)
     {
+        $authRole = auth()->user()->groupRole($team->id);
+        if ($authRole == 'guest' && auth()->user()->global_role != 'admin') {
+            return redirect()->route('teams')->with('error', 'Unauthorized');
+        }
         return view('team.resource', compact('team'));
     }
     public function showMember(Team $team)
     {
+        $authRole = auth()->user()->groupRole($team->id);
+        if ($authRole == 'guest' && auth()->user()->global_role != 'admin') {
+            return redirect()->route('teams')->with('error', 'Unauthorized');
+        }
         return view('team.member', compact('team'));
     }
     public function showAudit(Team $team)
     {
+        $authRole = auth()->user()->groupRole($team->id);
+        if ($authRole == 'guest' && auth()->user()->global_role != 'admin') {
+            return redirect()->route('teams')->with('error', 'Unauthorized');
+        }
         return view('team.audit', compact('team'));
     }
 
