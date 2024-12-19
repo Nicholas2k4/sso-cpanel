@@ -32,7 +32,6 @@
 
     @yield('style')
     @livewireStyles
-    @livewireScripts
 </head>
 
 <body>
@@ -55,6 +54,6 @@
 
     @yield('script')
     @livewireScripts
-</body class="overflow-y-hidden">
+</body>
 
 </html>
