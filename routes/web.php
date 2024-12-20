@@ -47,7 +47,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/{type}', [ResourceController::class, 'store'])->name('store');
         Route::delete('/{resource}', [ResourceController::class, 'delete'])->name('delete');
     });
-    Route::get('/resources/create', function () { return view('create-resource'); });
+    // Route::get('/resources/create', function () { return view('create-resource'); });
 });
 
 Route::middleware(['check:admin'])->group(function () {});
