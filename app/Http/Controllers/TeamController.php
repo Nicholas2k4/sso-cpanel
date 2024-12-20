@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\Team;
 use App\Models\TeamMember;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -33,7 +34,7 @@ class TeamController extends Controller
 
         $team = Team::create([
             'name' => $request->name,
-            'logo_link' => $logoPath,
+            'logo_link' => Storage::url($logoPath),
             'leader_user_id' => $request->leader_user_id,
         ]);
 
@@ -47,6 +48,30 @@ class TeamController extends Controller
         $auditLog->save();
 
         return redirect()->route('teams');
+    }
+
+    public function searchLeader(Request $request)
+    {
+        $search = $request->input('search', '');
+        $limit = $request->input('limit', 10);
+
+        $users = User::where('display_name', 'LIKE', '%' . $search . '%')
+            ->take($limit)
+            ->get(['id', 'display_name']);
+
+        return response()->json($users);
+    }
+
+    public function searchTeams(Request $request)
+    {
+        $search = $request->input('search', '');
+        $limit = $request->input('limit', 10);
+
+        $teams = Team::where('name', 'LIKE', '%' . $search . '%')
+            ->take($limit)
+            ->get(['id', 'name']);
+
+        return response()->json($teams);
     }
 
     public function show()
@@ -276,8 +301,7 @@ class TeamController extends Controller
                     }
                 }
 
-                $response = Http::
-                    withHeader("Authorization", $resourceData["whmAuth"])
+                $response = Http::withHeader("Authorization", $resourceData["whmAuth"])
                     ->withOptions(["verify" => false])
                     ->get($resourceData['whmUrl'] . '/json-api/create_user_session', [
                         'api.version' => '1',
@@ -320,6 +344,6 @@ class TeamController extends Controller
             }
         }
 
-       abort(403);
+        abort(403);
     }
 }

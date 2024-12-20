@@ -45,7 +45,72 @@
                 Log</a>
         </div>
 
-        <h1>Audit</h1>
+        {{-- Tables --}}
+        <div class="overflow-x-auto rounded-lg z-0">
+            <table class="w-full text-sm text-left rtl:text-right">
+                <thead class="text-xs text-gray-700 uppercase text-center">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">
+                            #
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Type
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Team
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Actor
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Obj Type
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Obj ID
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Action
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Description
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{-- @if ($resources->count() == 0) --}}
+                        {{-- <tr>
+                            <td colspan="8" class="text-center font-bold text-2xl py-12">There's no action</td>
+                        </tr> --}}
+                    {{-- @endif --}}
+                    {{-- @foreach ($resources as $resource) --}}
+                        <tr class="odd:bg-[#E6F3FD] even:bg-white text-center">
+                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                1
+                            </th>
+                            <td class="px-6 py-4">test
+                            </td>
+                            <td class="px-6 py-4">test
+                            </td>
+                            <td class="px-6 py-4">test
+                            </td>
+                            <td class="px-6 py-4">test
+                            </td>
+                            <td class="px-6 py-4">test
+                            </td>
+                            <td class="px-6 py-4">test
+                            </td>
+                            <td class="px-6 py-4">test
+                            </td>
+                        </tr>
+                    {{-- @endforeach --}}
+                </tbody>
+            </table>
+        </div>
+
+        {{-- Pagination --}}
+        {{-- <div class="mt-3">
+            {{ $resource->links() }}
+        </div> --}}
     </div>
 @endsection
 

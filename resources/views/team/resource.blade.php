@@ -51,7 +51,7 @@
                 Log</a>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {{-- <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             @forelse ($resources as $resource)
                 @if ($resource->resource->type == 'cpanel')
                     <x-resource-card.cpanel :resource="$resource" />
@@ -63,7 +63,27 @@
             @endforelse
         </div>
 
-        {{ $resources->links() }}
+        {{ $resources->links() }} --}}
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 max-w-[1200px]">
+            {{-- @foreach ($resources as $resource) --}}
+                <div class="flex flex-col min-h-[170px] max-w-[400px] bg-[#F7F6FA] rounded-lg overflow-hidden">
+                    <div class="flex p-5 gap-x-4">
+                        <div class="w-auto">
+                            <h2 class="font-bold text-lg mb-1">{{-- $resource->name --}}Cpanel</h2>
+                            <p class="text-sm text-gray-500">{{-- $team->leader->display_name --}} Type: abc</p>
+                        </div>
+                    </div>
+                    <hr class="mt-auto">
+                    <a href="{{-- route('teams.resource', $team->id) --}}"
+                        class="bg-blue-100 w-full h-[40px] flex items-center justify-center transition-all duration-200 hover:bg-blue-500 hover:text-white">Detail</a>
+                </div>
+            {{-- @endforeach --}}
+        </div>
+
+        {{-- Pagination --}}
+        {{-- <div class="mt-3">
+            {{ $resource->links() }}
+        </div> --}}
     </div>
 @endsection
 
