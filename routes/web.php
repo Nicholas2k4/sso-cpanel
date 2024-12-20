@@ -41,23 +41,22 @@ Route::middleware('auth')->group(function () {
 
     // For all routes to /resource, we need to make sure it's an admin.
     Route::middleware(AdminMiddleware::class)->prefix('/resource')->name('resource.')->group(function () {
+        Route::get('/', [ResourceController::class, 'list'])->name('list');
         Route::get('/create/{type}', [ResourceController::class, 'create'])->name('create');
         Route::get('/{resource}', [ResourceController::class, 'show'])->name('show');
         Route::post('/{type}', [ResourceController::class, 'store'])->name('store');
         Route::delete('/{resource}', [ResourceController::class, 'delete'])->name('delete');
     });
     // Route::get('/resources/create', function () { return view('create-resource'); });
-
-    Route::middleware([AdminMiddleware::class])->group(function () {
-        Route::get('/resource-list', function () {
-            return view('resourceList');
-        })->name('resource.list');
-        Route::get('/showEditResource', function () {
-            return view('showEditResource');
-        })->name('resource.showEdit');
-    });
 });
 
+Route::middleware(['check:admin'])->group(function () {});
 
+// Route::get('/resource-list', function () {
+//     return view('resourceList');
+// })->name('resource.list');
+Route::get('/showEditResource', function () {
+    return view('showEditResource');
+})->name('resource.showEdit');
 
 Route::get('/resource/edit/{room}/{keys}', [ResourceController::class, 'edit'])->name('resource.edit');
