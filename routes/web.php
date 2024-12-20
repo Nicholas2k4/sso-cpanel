@@ -5,6 +5,8 @@ use App\Http\Controllers\ResourceController;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TeamController;
+use App\Models\User;
+use Illuminate\Http\Request;
 
 Route::middleware(['check:user,admin'])->group(function () {
     Route::get('/', function () {
@@ -23,6 +25,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware('auth')->group(function () {
     Route::get('/teams/create', [TeamController::class, 'create'])->name('teams.create');
+    Route::get('/api/users', [TeamController::class, 'searchLeader']);
+    Route::get('/api/teams', [TeamController::class, 'searchTeams']);
     Route::post('/teams', [TeamController::class, 'store'])->name('teams.store');
     Route::get('/teams', [TeamController::class, 'show'])->name('teams');
     Route::get('/teams/{team}/resource', [TeamController::class, 'showResource'])->name('teams.resource');
@@ -43,6 +47,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/{type}', [ResourceController::class, 'store'])->name('store');
         Route::delete('/{resource}', [ResourceController::class, 'delete'])->name('delete');
     });
+    // Route::get('/resources/create', function () { return view('create-resource'); });
 });
 
 Route::middleware(['check:admin'])->group(function () {});
