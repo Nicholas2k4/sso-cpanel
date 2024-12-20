@@ -52,9 +52,9 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['check:admin'])->group(function () {});
 
-Route::get('/resource-list', function () {
-    return view('resourceList');
-})->name('resource.list');
+// Route::get('/resource-list', function () {
+//     return view('resourceList');
+// })->name('resource.list');
 Route::get('/showEditResource', function () {
     return view('showEditResource');
 })->name('resource.showEdit');

@@ -162,6 +162,12 @@
                         <span>List Teams</span>
                     </li>
                 </a>
+                <a href="{{ route('resource.list') }}" class="text-md">
+                    <li class="flex flex-row items-center p-2 px-3 my-2 hover:bg-gray-200 rounded-lg transition">
+                        <i class="fa-solid fa-chart-column mr-3 text-lg w-[22px]"></i>
+                        <span>Manage Resources</span>
+                    </li>
+                </a>
             @endif
             @if (auth()->user()->global_role == 'user')
                 <a href="{{ route('teams') }}" class="text-md">
@@ -177,18 +183,13 @@
                     <span>Create Team</span>
                 </li>
             </a>
-            <a href="#" class="text-md">
-                <li class="flex flex-row items-center p-2 px-3 my-2 hover:bg-gray-200 rounded-lg transition">
-                    <i class="fa-solid fa-chart-column mr-3 text-lg w-[22px]"></i>
-                    <span>Manage Resources</span>
-                </li>
-            </a>
-            <a href="#" class="text-md">
+
+            {{-- <a href="#" class="text-md">
                 <li class="flex flex-row items-center p-2 px-3 my-2 hover:bg-gray-200 rounded-lg transition">
                     <i class="fa-solid fa-list mr-3 text-lg w-[22px]"></i>
                     <span>Audit Logs</span>
                 </li>
-            </a>
+            </a> --}}
             <hr>
         </ul>
 

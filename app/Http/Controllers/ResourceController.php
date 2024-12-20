@@ -15,8 +15,9 @@ class ResourceController extends Controller
 
     public function list()
     {
-        $resources = Resource::paginate(10);
-        return compact('resources');
+        return view('resource.index');
+        // $resources = Resource::paginate(10);
+        // return compact('resources');
     }
 
     public function create(string $type)
