@@ -32,7 +32,8 @@ services:
       - "8000:8000"
 
   web-cli:
-    image: sso-cpanel-web:latest
+    image: sso-cpanel-web
+    build: .
     restart: on-failure
     environment:
       - APP_NAME=${APP_NAME}
