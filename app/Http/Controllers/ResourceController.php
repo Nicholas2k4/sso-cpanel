@@ -72,7 +72,8 @@ class ResourceController extends Controller
             $auditLog->actor_id = Auth::user()->id;
             $auditLog->save();
 
-            return redirect()->route('resource.show', $resource->id)->with('success', 'Resource created!');
+            return redirect()->route('resource.list')->with('success', 'Resource created!');
+            // return redirect()->route('resource.show', $resource->id)->with('success', 'Resource created!');
         }
 
         return redirect()->back()->with('error', 'Invalid resource type');
