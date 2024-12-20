@@ -68,7 +68,7 @@
                             {{ $resource->type }}
                         </td>
                         <td class="px-6 py-4 flex items-center justify-center gap-x-2">
-                            <a
+                            <a href="{{ route('resource.delete', $resource->id) }}"
                                 class="font-medium bg-red-400 hover:bg-red-500 transition-all duration-200 px-4 py-2 rounded-lg shadow">Action</a>
                         </td>
                     </tr>
